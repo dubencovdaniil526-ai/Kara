@@ -18,10 +18,18 @@ jobs:
           echo "$HOME/gradle-4.9/bin" >> $GITHUB_PATH
       - name: Unpack project
         run: unzip -q kara-mod-source.zip
+      - name: Add Forge maven to project
+        run: |
+          cat >> kara-mod/build.gradle <<'EOF'
+
+          repositories {
+              maven { url = "https://maven.minecraftforge.net/" }
+          }
+          EOF
       - name: Build
         run: |
           cd kara-mod
-          gradle setupCIWorkspace build --no-daemon
+          gradle setupCIWorkspace build --no-daemon --refresh-dependencies
       - uses: actions/upload-artifact@v4
         with:
           name: Kara-mod-jar
